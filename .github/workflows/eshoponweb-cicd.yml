@@ -11,7 +11,6 @@ env:
   SUBSCRIPTION-ID: f1ac5623-4081-4950-9791-7e6e6dd38b92
   WEBAPP-NAME: eshoponweb-GITHUBPractice
 
-
 jobs:
   #Build, test and publish .net web project in repository
   buildandtest:
@@ -25,6 +24,16 @@ jobs:
       with:
         dotnet-version: '8.0.x'
         dotnet-quality: 'preview'
+  #Build/Test/Publish the .net project
+    - name: Build with dotnet
+      run: dotnet build ./eShopOnWeb.sln --configuration Release
+    - name: Test with dotnet
+      run: dotnet test ./eShopOnWeb.sln --configuration Release
+    - name: dotnet publish
+      run: |
+        dotnet publish ./src/Web/Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        cd ${{env.DOTNET_ROOT}}/myapp
+        zip -r ../app.zip .
 
     # upload the published website code artifacts
     - name: Upload artifact for deployment job
